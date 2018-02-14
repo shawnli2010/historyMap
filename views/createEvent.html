@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>history map</title>
+    <link href='/bootstrap/css/bootstrap.min.css' rel='stylesheet'/>
+    <link href='/bootstrap/css/bootstrap-responsive.min.css' rel='stylesheet'/>
+    <script scr="/bootstrap/css/bootstrap.min.js" type="text/javascript"></script>
+  </head>
+  <body>
+
+    <div class="container">  
+        <div class="row" >
+            <div class="col-md-6 col-md-offset-3">
+                <h1>Create a history event</h1>
+            </div> 
+        </div>
+    </div>  
+
+    {% if historyEvent %}
+    <form role="form" action="/editEvent?objectid={{historyEvent._id.toString()}}" method=post>
+    {% else %}
+    <form role="form" action="/createEvent" method=post>
+    {% endif%}    
+      <div class="form-group">
+        <label for="name">Event Name</label>
+        {% if historyEvent %}
+        <input type="text" class="form-control" id="name" name="name" value="{{historyEvent.name}}">
+        {% else %}
+        <input type="text" class="form-control" id="name" name="name">
+        {% endif%}
+
+        <label for="name">Area Name</label>
+        {% if historyEvent %}
+        <input type="text" class="form-control" id="areaName" name="areaName" value="{{historyEvent.areaName}}">
+        {% else %}
+        <input type="text" class="form-control" id="areaName" name="areaName">
+        {% endif%}
+
+        <label for="areaLongitude">Area Longitude</label>
+        {% if historyEvent %}
+        <input type="number" step="any" class="form-control" id="areaLongitude" name="areaLongitude" value="{{historyEvent.areaCoordinates[0]}}">
+        {% else %}        
+        <input type="number" step="any" class="form-control" id="areaLongitude" name="areaLongitude">
+        {% endif%}
+
+        <label for="areaLatitude">Area Latitude</label>
+        {% if historyEvent %}
+        <input type="number" step="any" class="form-control" id="areaLatitude" name="areaLatitude" value="{{historyEvent.areaCoordinates[1]}}">
+        {% else %}        
+        <input type="number" step="any" class="form-control" id="areaLatitude" name="areaLatitude">
+        {% endif%}
+
+        <label for="startYear">Start Year</label>
+        {% if historyEvent %}
+        <input type="number" class="form-control" id="startYear" name="startYear" value="{{historyEvent.startYear}}">
+        {% else %}        
+        <input type="number" class="form-control" id="startYear" name="startYear">
+        {% endif%}
+      </div>
+      <button type="submit" class="btn btn-default">Create</button>
+    </form>
+
+    </body>
+</html>

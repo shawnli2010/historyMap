@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Responsive Table</title>
+  
+    <link rel="stylesheet" href="/stylesheets/eventsList.css">
+    <link href='/bootstrap/css/bootstrap.min.css' rel='stylesheet'/>
+</head>
+
+<body>
+    <div class="table-events">
+        <div class="header">
+            Events
+        </div>
+        <form role="form" action="/eventsList" method=post>
+            <table cellspacing="0">
+                <tr>
+                    <th>Event Name</th>
+                    <th>Area Name</th>
+                    <th>Year</th>
+                    <th>Drop to Map?</th>
+                </tr>
+
+                {% for event in historyEvents -%}
+                <tr>
+                    <td>{{event.name}}</td>
+                    <td>{{event.areaName}}</td>
+                    <td>{{event.startYear}}</td>
+                    <td><input type="checkbox" name={{event._id|raw|json_encode}}></td>
+                </tr>
+                {%- endfor %}
+
+            </table>
+            <div class="buttonHolder" style="text-align: center">
+              <input class="btn btn-danger" type="submit">
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
