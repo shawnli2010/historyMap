@@ -28,10 +28,13 @@
                     <td>{{event.name}}</td>
                     <td>{{event.areaName}}</td>
                     <td>{{event.startYear}}</td>
-                    <td><input type="checkbox" name={{event._id|raw|json_encode}}></td>
+                    {% if event.onMap %}
+                    <td><input type="checkbox" name={{event._id|raw|json_encode}} checked></td>
+                    {% else %}
+                    <td><input type="checkbox" name={{event._id|raw|json_encode}} ></td>
+                    {% endif %}
                 </tr>
                 {%- endfor %}
-
             </table>
             <div class="buttonHolder" style="text-align: center">
               <input class="btn btn-danger" type="submit">

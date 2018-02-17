@@ -1,4 +1,5 @@
 var express = require('express');
+var _ = require('underscore-node');
 var router = express.Router();
 var historyEventModel = global.dbHandle.getModel("historyEvent");
 var userModel = global.dbHandle.getModel("user");
@@ -90,33 +91,39 @@ router.post('/editEvent', function(req, res, next) {
 });
 
 router.get('/eventsList', function(req, res, next) {
-    historyEventModel.find({},function(err,historyEvents){
-        if(err){
-            return console.log("妈的，出错了");
-        }else{
-            res.render('eventsList', { historyEvents : historyEvents });
+    userModel.findById(userObjectId, function(err, user) {
+        if (err) {
+            return console.log("妈的，出错了, userModel.findById()");
+        } else {
+            historyEventModel.find({},function(err,historyEvents){
+                if(err){
+                    return console.log("妈的，出错了");
+                }else{
+                    for (i in historyEvents) {
+                        historyEvents[i].onMap = _.contains(user.eventsOnMap, historyEvents[i]._id.toString());
+                    }
+
+                    res.render('eventsList', { historyEvents : historyEvents});
+                }
+            });  
         }
-    });  
+    });
 });
 
 router.post('/eventsList', function(req, res, next) {
+    var eventIdArray = [];
     var requestBody = req.body;
-
     for (var eventId in requestBody) {
-        console.log(eventId);
+        eventIdArray.push(eventId);
     }
-    // var newHistoryEvent = normalizeData(requestBody);
-    // var eventId = req.query.objectid;
 
-    // historyEventModel.findByIdAndUpdate(eventId, {$set:newHistoryEvent},{new:true},function(err, historyEvent){
-    //     if(err){
-    //         return next(err);
-    //     }else{
-    //         console.log("history event 已经成功被update啦！！！");
-    //         console.log(historyEvent);
-    //         res.redirect('/');
-    //     }
-    // });  5a44f7e332069249b0610c8c
+    userModel.update({_id : userObjectId}, {eventsOnMap : eventIdArray}, function(err, value) {
+        if (err) {
+            return console.log("妈的，出错了, userModel.update()");
+        } else {
+            res.redirect('/');
+        }
+    });
 });
 
 function normalizeData(requestBody) {
