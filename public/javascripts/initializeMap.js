@@ -66,7 +66,7 @@ function initMap() {
 
         marker.addListener('click', function() {
           // console.log('marker clicked');
-          unselectMarkerAndCell();
+          unselectMarkerAndCell(eventIdToMarker, eventIdToMarkerImagePath);
 
           // marker.title stores the id of the corresponding event (temp)
           var thisEventId = this.title;      
@@ -81,7 +81,7 @@ function initMap() {
 
       map.addListener('click', function() {
         // console.log('map clicked');
-        unselectMarkerAndCell();
+        unselectMarkerAndCell(eventIdToMarker, eventIdToMarkerImagePath);
       });          
   });
 };
