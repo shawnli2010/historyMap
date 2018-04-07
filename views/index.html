@@ -21,14 +21,14 @@
             <div class="col-md-3">            
                 <div class="list-group" style="height:500px;overflow:scroll">
                     {% for event in historyEvents -%}
-                    <div class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="list-group-item list-group-item-action flex-column align-items-start" id='cell_{{event._id.toString()}}'>
                         <div class="d-flex w-100 justify-content-between">
                           <h5 class="mb-1">Name: {{event.name}}</h5>
                           <h5 class="mb-1">Logitude: {{event.areaCoordinates[0]}}, Latitude: {{event.areaCoordinates[1]}} </h5>
                           <h5 class="mb-1">AreaName: {{event.areaName}}</h5>
                           <h5 class="mb-1">StartYear: {{event.startYear}}</h5>
                           <button type="button" class="btn btn-warning" onclick="javascript:window.location.href=window.location.href+'editEvent?objectid='+'{{event._id.toString()}}'">Edit</button>                          
-                          <button type="button" class="btn" style="width:100%; background:#FFA500" id='{{event._id.toString()}}'>    </button>
+                          <button type="button" class="btn" style="width:100%; background:#FFA500" id='indicator_{{event._id.toString()}}'>    </button>
                         </div>
                     </div>
                     {%- endfor %}
@@ -46,82 +46,6 @@
   </body>
 </html>
 
-<script>
-    var map;
-    var eventIdToMarker = {};
-    var eventIdToMarkerImagePath = {};
-
-    var colorMap = {
-      'black' : '#000000',
-      'blue' : '#0062EE',
-      'green' : '#86D750',
-      'orange' : '#FF9A02',
-      'pink' : '#FF5EAB',
-      'purple' : '#8837BD',
-      'red' : '#D30124',
-      'yellow' : '#FFD43C'
-    };
-
-    var colorNames = Object.keys(colorMap);
-
-    function initMap() {
-      map = new google.maps.Map(document.getElementById('allmap'), {
-        center: {lat: 39.915, lng: 116.404},
-        zoom: 4
-      });
-
-      $.getJSON('/tempForMarker', function(data) {
-          localStorage.removeItem('selectedMarkerId');
-          var colorIndex = 0;
-          
-          for (var i in data) {
-            var eventId = data[i]._id;
-            var latitude = data[i].areaCoordinates[1];
-            var longitude = data[i].areaCoordinates[0];
-            var myLatLng = {lat: latitude, lng: longitude};
-
-            var colorName = colorNames[colorIndex];
-            var markerImagePath = 'images/map-marker-' + colorName + '.png';
-            var colorIndicatorHashvalue = colorMap[colorName]
-            eventIdToMarkerImagePath[eventId] = markerImagePath;
-
-            var marker = new google.maps.Marker({
-              position: myLatLng,
-              map: map,
-              title: eventId,
-              icon: markerImagePath
-            });
-            
-            eventIdToMarker[eventId] = marker;
-
-            var colorIndicatorId = '#' + eventId;
-            $(colorIndicatorId).css('background', colorIndicatorHashvalue);
-
-            colorIndex = (colorIndex + 1) % colorNames.length;
-
-            marker.addListener('click', function() {
-              this.setIcon('images/map-marker-selected.png');              
-
-              var selectedMarkerId = localStorage.getItem('selectedMarkerId');
-              if (selectedMarkerId != null) {
-                var selectedMarker = eventIdToMarker[selectedMarkerId];
-                var selectedMarkerOriginalImagePath = eventIdToMarkerImagePath[selectedMarkerId];
-                selectedMarker.setIcon(selectedMarkerOriginalImagePath);
-              }
-
-              localStorage.setItem('selectedMarkerId', this.title);
-            });
-          }
-
-          map.addListener('click', function() {
-            for (eventId in eventIdToMarker) {
-              var marker = eventIdToMarker[eventId];
-              var originalImagePath = eventIdToMarkerImagePath[marker.title];
-              marker.setIcon(originalImagePath);
-            }
-          });          
-      });
-  }
-</script>
+<script src="/javascripts/initializeMap.js"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaUE7NEV-LD0x5B3PgXKSQn6QVvIA9MBA&callback=initMap">
 </script>
