@@ -13,8 +13,9 @@ var colorMap = {
   'red' : '#D30124',
   'yellow' : '#FFD43C'
 };
+var colorNamesArray = Object.keys(colorMap);
 
-var colorNames = Object.keys(colorMap);
+var selectedMarkerImagePath = 'images/map-marker-selected.png';
 
 function unselectMarkerAndCell(eventIdToMarker, eventIdToMarkerImagePath) {
   var oldSelectedEventId = localStorage.getItem('selectedEventId');
@@ -28,6 +29,12 @@ function unselectMarkerAndCell(eventIdToMarker, eventIdToMarkerImagePath) {
   }
 };
 
+function assignColorToColorIndicator(colorName, eventId, markerImagePath) {
+  var colorIndicatorHashvalue = colorMap[colorName]      
+  var colorIndicatorCSSId = '#indicator_' + eventId;
+  $(colorIndicatorCSSId).css('background', colorIndicatorHashvalue);    
+}
+
 function initMap() {
   map = new google.maps.Map(document.getElementById('allmap'), {
     center: {lat: 39.915, lng: 116.404},
@@ -36,7 +43,6 @@ function initMap() {
 
   $.getJSON('/tempForMarker', function(data) {
       localStorage.removeItem('selectedEventId');
-      var colorIndex = 0;
       
       for (var i in data) {
         var eventId = data[i]._id;
@@ -44,9 +50,11 @@ function initMap() {
         var longitude = data[i].areaCoordinates[0];
         var myLatLng = {lat: latitude, lng: longitude};
 
-        var colorName = colorNames[colorIndex];
+        var colorIndex = i % colorNamesArray.length;
+        var colorName = colorNamesArray[colorIndex];    
         var markerImagePath = 'images/map-marker-' + colorName + '.png';
-        var colorIndicatorHashvalue = colorMap[colorName]
+        
+        assignColorToColorIndicator(colorName, eventId, markerImagePath);
         eventIdToMarkerImagePath[eventId] = markerImagePath;
 
         // marker.title stores the id of the corresponding event (temp)
@@ -56,13 +64,7 @@ function initMap() {
           title: eventId,
           icon: markerImagePath
         });
-        
         eventIdToMarker[eventId] = marker;
-
-        var colorIndicatorCSSId = '#indicator_' + eventId;
-        $(colorIndicatorCSSId).css('background', colorIndicatorHashvalue);
-
-        colorIndex = (colorIndex + 1) % colorNames.length;
 
         marker.addListener('click', function() {
           // console.log('marker clicked');
@@ -70,7 +72,7 @@ function initMap() {
 
           // marker.title stores the id of the corresponding event (temp)
           var thisEventId = this.title;      
-          this.setIcon('images/map-marker-selected.png');
+          this.setIcon(selectedMarkerImagePath);
           var selectedEventCellCSSId = '#cell_' + thisEventId;
           $(selectedEventCellCSSId).css('background', colorMap['pink']);
 
