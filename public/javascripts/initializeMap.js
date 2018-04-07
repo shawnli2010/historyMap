@@ -16,21 +16,16 @@ var colorMap = {
 
 var colorNames = Object.keys(colorMap);
 
-function simpleStringify (object){
-    var simpleObject = {};
-    for (var prop in object ){
-        if (!object.hasOwnProperty(prop)){
-            continue;
-        }
-        if (typeof(object[prop]) == 'object'){
-            continue;
-        }
-        if (typeof(object[prop]) == 'function'){
-            continue;
-        }
-        simpleObject[prop] = object[prop];
-    }
-    return JSON.stringify(simpleObject); // returns cleaned up JSON
+function unselectMarkerAndCell(eventIdToMarker, eventIdToMarkerImagePath) {
+  var oldSelectedEventId = localStorage.getItem('selectedEventId');
+  if (oldSelectedEventId != null) {
+    var oldSelectedMarker = eventIdToMarker[oldSelectedEventId];
+    var oldSelectedMarkerImagePath = eventIdToMarkerImagePath[oldSelectedEventId];
+    oldSelectedMarker.setIcon(oldSelectedMarkerImagePath);
+
+    var oldSelectedEventCellCSSId = '#cell_' + oldSelectedEventId;
+    $(oldSelectedEventCellCSSId).css('background', '#FFFFFF');
+  }
 };
 
 function initMap() {
@@ -63,8 +58,6 @@ function initMap() {
         });
         
         eventIdToMarker[eventId] = marker;
-        // markerToEventId[simpleStringify(marker)] = eventId;
-        // console.log('simpleStringify(marker): ' + simpleStringify(marker));
 
         var colorIndicatorCSSId = '#indicator_' + eventId;
         $(colorIndicatorCSSId).css('background', colorIndicatorHashvalue);
@@ -72,40 +65,23 @@ function initMap() {
         colorIndex = (colorIndex + 1) % colorNames.length;
 
         marker.addListener('click', function() {
-          this.setIcon('images/map-marker-selected.png');
+          // console.log('marker clicked');
+          unselectMarkerAndCell();
 
           // marker.title stores the id of the corresponding event (temp)
           var thisEventId = this.title;      
+          this.setIcon('images/map-marker-selected.png');
           var selectedEventCellCSSId = '#cell_' + thisEventId;
-          $(selectedEventCellCSSId).css('background', colorMap['pink']);      
-
-          var oldSelectedEventId = localStorage.getItem('selectedEventId');
-          if (oldSelectedEventId != null) {
-            var oldSelectedMarker = eventIdToMarker[oldSelectedEventId];
-            var oldSelectedMarkerImagePath = eventIdToMarkerImagePath[oldSelectedEventId];
-            oldSelectedMarker.setIcon(oldSelectedMarkerImagePath);
-
-            var oldSelectedEventCellCSSId = '#cell_' + oldSelectedEventId;
-            $(oldSelectedEventCellCSSId).css('background', '#FFFFFF');
-          }
+          $(selectedEventCellCSSId).css('background', colorMap['pink']);
 
           // marker.title stores the id of the corresponding event (temp)
           localStorage.setItem('selectedEventId', this.title);
         });
       }
 
-      // console.log('markerToEventId: ' + JSON.stringify(markerToEventId));
-
       map.addListener('click', function() {
-        for (eventId in eventIdToMarker) {
-          var marker = eventIdToMarker[eventId];
-          // marker.title stores the id of the corresponding event (temp)
-          var originalImagePath = eventIdToMarkerImagePath[marker.title];
-          marker.setIcon(originalImagePath);
-
-          var oldSelectedEventCellCSSId = '#cell_' + eventId;
-          $(oldSelectedEventCellCSSId).css('background', '#FFFFFF');
-        }
+        // console.log('map clicked');
+        unselectMarkerAndCell();
       });          
   });
 };
