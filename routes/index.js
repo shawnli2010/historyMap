@@ -1,8 +1,10 @@
 var express = require('express');
 var _ = require('underscore-node');
+var mongoose=require('mongoose');
 var router = express.Router();
 var historyEventModel = global.dbHandle.getModel("historyEvent");
 var userModel = global.dbHandle.getModel("user");
+var eventGroupModel = global.dbHandle.getModel("eventGroup");
 
 //TODO: build the user system.....(gonna take long)
 var userObjectId = "5a83c9f4ca4d7d4bbfba12d0";
@@ -141,6 +143,40 @@ function normalizeData(requestBody) {
 
     return newHistoryEvent;
 };
+
+// 崖山海战：5abc53b7f0b4c717a64c81b8
+// 秦统一中国：5abc55fcf0b4c717a64c81b9
+// 吕布：5abc527ff0b4c717a64c81b6
+
+router.get('/qqq', function(req, res, next) {
+    // var newEventGroup = {
+    //     name : '三国时期',
+    //     yearRange : [220, 280],
+    //     events : [new mongoose.mongo.ObjectId('5abc53b7f0b4c717a64c81b8'), 
+    //               new mongoose.mongo.ObjectId('5abc55fcf0b4c717a64c81b9'), 
+    //               new mongoose.mongo.ObjectId('5abc527ff0b4c717a64c81b6')]
+    // };
+
+    // eventGroupModel.create(newEventGroup,function(err){
+    //     if(err){
+    //         return next(err);
+    //     }else{
+    //         console.log(newEventGroup.name + " eventGroup is inserted into database successfully！！！");
+    //         res.redirect('/');
+    //     }
+    // });   
+
+    eventGroupModel.
+    findById(new mongoose.mongo.ObjectId('5ad4113cc669894903040293')).
+    populate('events').
+    exec(function(err, eventGroup) {
+        if (err) {
+            return console.log("妈的，出错了, eventGroupModel.findOne().populate()");
+        } else {
+            console.log(eventGroup);
+        }
+    });
+});
 
 // firstUser = {
 //     name : "Shawn Li",

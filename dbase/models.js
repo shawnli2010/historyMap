@@ -1,3 +1,6 @@
+var mongoose=require('mongoose');
+var Schema=mongoose.Schema;
+
 module.exports={
     historyEvent : {
         name : { type : String , required : true },
@@ -19,5 +22,11 @@ module.exports={
         email : {type : String, required : true},
         password : {type : String, required : true},
         eventsOnMap : {type : [String] , required : true}
+    },
+
+    eventGroup : {
+        name : { type : String , required : true },
+        yearRange : {type : [Number] , required: false},
+        events : [{type : Schema.Types.ObjectId, ref : 'historyEvent'}]
     }
 };
