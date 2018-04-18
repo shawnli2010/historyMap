@@ -149,6 +149,7 @@ function normalizeData(requestBody) {
 // 吕布：5abc527ff0b4c717a64c81b6
 
 router.get('/qqq', function(req, res, next) {
+    // 1. Create event group
     // var newEventGroup = {
     //     name : '三国时期',
     //     yearRange : [220, 280],
@@ -166,14 +167,32 @@ router.get('/qqq', function(req, res, next) {
     //     }
     // });   
 
-    eventGroupModel.
-    findById(new mongoose.mongo.ObjectId('5ad4113cc669894903040293')).
-    populate('events').
-    exec(function(err, eventGroup) {
+    // 2. Query event group and POPULATE events with event data
+    // eventGroupModel.
+    // findById(new mongoose.mongo.ObjectId('5ad4113cc669894903040293')).
+    // populate('events').
+    // exec(function(err, eventGroup) {
+    //     if (err) {
+    //         return console.log("妈的，出错了, eventGroupModel.findOne().populate()");
+    //     } else {
+    //         console.log(eventGroup);
+    //     }
+    // });
+
+    // 3. Update the events array in a event group
+    var eventIdArray = [new mongoose.mongo.ObjectId('5abc53b7f0b4c717a64c81b8'), 
+              new mongoose.mongo.ObjectId('5abc55fcf0b4c717a64c81b9'), 
+              new mongoose.mongo.ObjectId('5abc527ff0b4c717a64c81b6')]    
+    // var eventIdArray = [];
+    // var eventIdArray = [new mongoose.mongo.ObjectId('5abc53b7f0b4c717a64c81b8'),  
+    //           new mongoose.mongo.ObjectId('5abc527ff0b4c717a64c81b6')]    
+
+    eventGroupModel.update({_id : new mongoose.mongo.ObjectId('5ad4113cc669894903040293')}, 
+                            {events : eventIdArray}, function(err, value) {
         if (err) {
-            return console.log("妈的，出错了, eventGroupModel.findOne().populate()");
+            return console.log("妈的，出错了, eventGroupModel.update()");
         } else {
-            console.log(eventGroup);
+            console.log(value);
         }
     });
 });

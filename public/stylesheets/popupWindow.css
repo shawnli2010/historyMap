@@ -1,0 +1,134 @@
+/*
+This defines the workspace where i place the demo.
+*/
+#container {
+    text-align: left;
+    background: #FFF;
+    width: 865px;
+    margin: 20px auto;
+    padding: 20px;
+    border-left: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+    -moz-box-shadow: 0px 0px 10px #BBB;
+    -webkit-box-shadow: 0px 0px 10px #BBB;
+    box-shadow: 0px 0px 10px #BBB;
+}
+
+/*
+It defines the layer which will cover the site once the 
+floating window is showed.
+*/
+#darkOverlay{
+    background: none repeat scroll 0 0 rgba(255, 255, 255, 0.8);
+    cursor: auto;
+    display: none; /*hidding if there's no call */
+    height: 100%;
+    left: 0;
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100; /*over everything */
+}
+
+/*
+We want the content to be center...
+*/
+#floatWrap{
+    margin: 0 auto;
+    position: static;
+    width: 878px;
+    z-index: 102;   
+}
+
+/*
+Defining the window wrap...
+*/
+#floatContent{
+    float: left;
+    background: white;
+    box-shadow: 0 3px 8px rgba(34, 25, 25, 0.4);
+    z-index: 101; /*over the overlay*/
+    margin:80px 0 80px 0;
+    position:relative;  
+}
+/*
+Defining the window...
+*/
+#mainFloat{
+    float: left;
+    margin: 0;
+    width: 900px;
+    min-height: 500px;
+    position: relative; 
+    /*witht his background we divide visually
+    the space*/
+    background: url('imgs/bgFloat.gif') repeat-y #fff;
+}
+
+/*
+Adding the X for closing the window
+*/
+.close{
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    width: 30px;
+    height: 30px;
+    background: transparent url('imgs/fancybox.png') -40px 0px;
+    cursor: pointer;
+    z-index: 1103;
+    display: inline;    
+}
+
+/* Left tabs menu*/
+#menuLeft{
+    float:left;
+    width:223px;    
+    margin:90px 0 0 0;
+}
+#menuLeft ul{
+    margin: -10px 0 0 0;
+    float: left;
+    list-style: none outside none;
+    padding: 0;
+    width: 100%;
+}
+#menuLeft li{
+    border-bottom: 1px solid #DDD;
+    float: left;
+    padding: 0 0 0 12px;
+    width: 190px;
+    margin: 0 10px 0 10px;  
+}
+#menuLeft ul li a{
+    color: #333;
+    display: block;
+    padding: 18px 0;
+    text-decoration: none;
+    width: 204px;
+    font-size:1.2em;    
+}
+#menuLeft a:hover{
+    text-decoration:none;   
+}
+#menuLeft .active,
+#menuLeft .active:hover {
+    background: #fff;
+    width: 194px;
+    border: 1px solid #ddd;
+    border-width: 1px 0 1px 1px;
+    margin-top: -1px;
+    margin-right: -2px;
+    margin-left:10px;
+    padding:0 0 0 20px;
+}
+#menuLeft li:hover, #horario li:hover {
+    background: #eee;
+}
+#infoContent{
+    float: left;
+    width: 677px;
+    padding: 0;
+    position:relative;
+}
